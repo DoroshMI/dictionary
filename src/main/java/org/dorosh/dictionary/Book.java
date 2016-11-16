@@ -1,3 +1,8 @@
+/**
+  *
+  *
+  */
+
 package org.dorosh.dictionary;
 
 import javax.persistence.*;
@@ -5,11 +10,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 /**
- * @author Antonio Goncalves
- *         APress Book - Beginning Java EE 7 with Glassfish 4
- *         http://www.apress.com/
- *         http://www.antoniogoncalves.org
- *         --
+ * @author Marya Dorosh
+ *         
  */
 @Entity
 @NamedQueries({

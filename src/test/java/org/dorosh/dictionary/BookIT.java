@@ -67,7 +67,7 @@ public class BookIT {
     em.persist(book);
     tx.commit();
     assertNotNull("ID should not be null", book.getId());
-
+System.out.println("I am");
     // Retrieves all the books from the database
     List<Book> books = em.createNamedQuery("findBookH2G2", Book.class).getResultList();
     assertEquals(1, books.size());
