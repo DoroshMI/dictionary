@@ -1,6 +1,7 @@
 package org.dorosh.dictionary;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -18,65 +19,58 @@ public class Main {
 
   public static void main(String[] args) {
 
-    // 1-Creates an instance of book
-	    ArrayList<String> translatedWords=new ArrayList<>();
-	    translatedWords.add("добре");
-	    translatedWords.add("чудово");
+    // 1-Creates an instance of words
+	  
 	    
-	  	Word word = new Word("good", "EN");
-	  	word.setTranslatedWords(translatedWords);
+	  	Word wordEN1 = new Word( "good", "EN");
+	  	Word wordEN2 = new Word( "sorry", "EN");
+	  	Word wordUA1 = new Word( "добре", "UA");
+	  	Word wordUA2 = new Word( "чудово", "UA");
+	  	Word wordUA3 = new Word( "вибачати", "UA");
 	  	
-	  	Word word1 = new Word("great", "EN");
-	  	translatedWords=new ArrayList<>();
-	  	translatedWords.add("великий");
-	    translatedWords.add("добре");
-	  	
-	  	word1.setTranslatedWords(translatedWords);
-
+	  	 //2-setTranslatedWords(translatedWords);
+	  	List<Word> wordENTranslatedWords =new ArrayList<>();
+	  	wordENTranslatedWords.add(wordUA1);
+	  	wordENTranslatedWords.add(wordUA2);
+	  	wordEN1.setTranslatedWords(wordENTranslatedWords);
+	  	 
+	  	wordENTranslatedWords =new ArrayList<>();
+	  	wordENTranslatedWords.add(wordEN1);
+	  	//wordENTranslatedWords.add(wordUA2);
+	  	wordUA1.setTranslatedWords(wordENTranslatedWords);
+	
 	   
-	   // 2-Obtains an entity manager and a transaction
+	   // 3-Obtains an entity manager and a transaction
 	    EntityManagerFactory emf = Persistence.createEntityManagerFactory("dictionary");
 	    EntityManager em = emf.createEntityManager();
 
-	    // 3-Persists the book to the database
+	    // 4-Persists the words to the database
 	    EntityTransaction tx = em.getTransaction();
 	    tx.begin();
-	    em.persist(word);
-	    em.persist(word1);
+	    em.persist(wordUA1);
+	    em.persist(wordUA2);
+	    em.persist(wordEN1);
 	    tx.commit();
+	      
+	    // 5-Executes the named query
+	     Word word = em.createNamedQuery("findAllWords", Word.class).getSingleResult();
 
-	    // 4-Executes the named query
-	    word = em.createNamedQuery("findAllWords", Word.class).getSingleResult();
+	    System.out.println("#########: " + word.getOriginalWord());
+	   
+	    for (Word w : word.getTranslatedWords())
+	    System.out.println("#########Translate: " + w.getOriginalWord());
 
-	    System.out.println("######### " + word.getOriginalWord());
-	    System.out.println("######### " + word.getTranslatedWords());
-
-	    // 5-Closes the entity manager and the factory
+	  //  System.out.println("#########: " + em.);
+		   
+	    for (Word w : word.getTranslatedWords())
+	    System.out.println("#########Translate: " + w.getOriginalWord());
+	    // 6-Closes the entity manager and the factory
 	    em.close();
 	    emf.close();  
 
 	  	
 	  	
-//  Book book = new Book("H2G2", "The Hitchhiker's Guide to the Galaxy", 12.5F, "1-84023-742-2", 354, false);
-//
-//    // 2-Obtains an entity manager and a transaction
-//    EntityManagerFactory emf = Persistence.createEntityManagerFactory("chapter04PU");
-//    EntityManager em = emf.createEntityManager();
-//
-//    // 3-Persists the book to the database
-//    EntityTransaction tx = em.getTransaction();
-//    tx.begin();
-//    em.persist(book);
-//    tx.commit();
-//
-//    // 4-Executes the named query
-//    book = em.createNamedQuery("findBookH2G2", Book.class).getSingleResult();
-//
-//    System.out.println("######### " + book.getDescription());
-//
-//    // 5-Closes the entity manager and the factory
-//    em.close();
-//    emf.close();
+
 
   }
 }

@@ -6,6 +6,7 @@
 package org.dorosh.dictionary;
 
 import java.util.Date;
+import java.util.List;
 import java.util.ArrayList;
 
 import javax.persistence.CollectionTable;
@@ -15,12 +16,17 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Transient;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.MapKeyColumn;
 import javax.persistence.GeneratedValue;
 
@@ -36,7 +42,6 @@ import javax.validation.constraints.Size;
 @NamedQueries({
         @NamedQuery(name = "findAllWords", query = "SELECT w FROM Word w WHERE w.originalWord='good'")
        })
-@IdClass(IdWord.class)
 public class Word {
 
   // ======================================
@@ -46,17 +51,19 @@ public class Word {
   @Id
   @GeneratedValue
   private Long id;
-  @Id 
+ // @Id 
   private String language;
   
   @Column(name="original_word", nullable=false)
   private String originalWord;
+  
   /*
    * @param <c>date</c> describe when word was inserted in database
    */
   @NotNull
   @Temporal(TemporalType.DATE)
   private Date date;
+  
   /*
    * @param study describe wheithe word is studied
    */
@@ -67,13 +74,12 @@ public class Word {
   
   /*
    * Collection of translated words
-   * many to many
+   * one to many
    */
-  @ElementCollection(fetch=FetchType.EAGER)
-  @CollectionTable(name="the_translation")
-   // @Transient
-  private ArrayList<String> translatedWords;
- 
+  @ManyToMany()
+  @JoinTable(name = "WORDS_AND_translatedWords")
+  private  List<Word> translatedWords;
+  
   /*
    * Collection of related Words
    */
@@ -93,6 +99,7 @@ public class Word {
   public Word(String originalWord, @Size(min = 2, max = 2) String language) {
 	  this.setOriginalWord(originalWord);
 	  this.language=language;
+	  translatedWords=null;
   }
 
   // ======================================
@@ -146,14 +153,14 @@ public class Word {
   public void setDateOfStudy(Date dateOfStudy) {
 	  this.dateOfStudy = dateOfStudy;
   }
-
-  public ArrayList<String> getTranslatedWords() {
+  
+  public List<Word> getTranslatedWords() {
 		return translatedWords;
-	}
+  }
 
-  public void setTranslatedWords(ArrayList<String> translatedWords) {
+  public void setTranslatedWords(List<Word> translatedWords) {
 		this.translatedWords = translatedWords;
-	}
+  }
 
   public ArrayList<String> getRelatedWords() {
 		return relatedWords;
@@ -175,9 +182,11 @@ public class Word {
     sb.append("{id=").append(getId());
     sb.append(getOriginalWord());
     sb.append(" translade as ");
-    sb.append(getTranslatedWords());
+    //sb.append(getTranslatedWords());
     sb.append('}');
     return sb.toString();
   }
+
+
 
 }
