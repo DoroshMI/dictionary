@@ -29,15 +29,14 @@ public class Main {
 	  	Word wordUA3 = new Word( "вибачати", "UA");
 	  	
 	  	 //2-setTranslatedWords(translatedWords);
-	  	List<Word> wordENTranslatedWords =new ArrayList<>();
-	  	wordENTranslatedWords.add(wordUA1);
-	  	wordENTranslatedWords.add(wordUA2);
-	  	wordEN1.setTranslatedWords(wordENTranslatedWords);
-	  	 
-	  	wordENTranslatedWords =new ArrayList<>();
-	  	wordENTranslatedWords.add(wordEN1);
-	  	//wordENTranslatedWords.add(wordUA2);
-	  	wordUA1.setTranslatedWords(wordENTranslatedWords);
+	  	wordEN1.setTranslatedWords(new ArrayList<>());
+	  	wordEN1.getTranslatedWords().add(wordUA1);
+	  	wordEN1.getTranslatedWords().add(wordUA2);
+	  	
+	  	
+	  	
+	  	wordUA1.setTranslatedWords(new ArrayList<>()); 
+	  	wordUA1.getTranslatedWords().add(wordEN1);
 	
 	   
 	   // 3-Obtains an entity manager and a transaction
@@ -60,10 +59,7 @@ public class Main {
 	    for (Word w : word.getTranslatedWords())
 	    System.out.println("#########Translate: " + w.getOriginalWord());
 
-	  //  System.out.println("#########: " + em.);
-		   
-	    for (Word w : word.getTranslatedWords())
-	    System.out.println("#########Translate: " + w.getOriginalWord());
+	 
 	    // 6-Closes the entity manager and the factory
 	    em.close();
 	    emf.close();  
