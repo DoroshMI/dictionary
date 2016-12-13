@@ -1,0 +1,73 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+
+<ui:composition template="layout.xhtml">
+
+  <ui:define name="title">Create a new word</ui:define>
+
+  <ui:define name="content">
+
+    <h:form id="wordForm">
+
+      <h:panelGrid columns="2">
+        <h:outputLabel value="Word : "/>
+        <h:inputText value="#{wordController.word.originalWord}"/>
+
+        <h:outputLabel value="Language : "/>
+        <h:inputText value="#{wordController.word.language}"/>
+
+      </h:panelGrid>
+
+
+      <h:panelGrid columns="2">
+      <h:outputLabel value="Description : "/>
+        <h:inputTextarea value="#{wordController.translatedWord.originalWord}" cols="16" rows="3"/>
+      </h:panelGrid>
+
+      
+
+      <h:commandButton value="Create a word" action="#{wordController.doCreateWord()}">
+        <f:ajax execute="@form" render=":wordlist :errors"/>
+      </h:commandButton>
+      <hr/>
+      <h:commandButton value="Translate" action="#{wordController.doTranslateWord()}">
+      </h:commandButton>
+
+    </h:form>
+
+    <hr/>
+    <h1>List of words</h1>
+
+    <h:dataTable id="wordlist" value="#{wordEJB.findAllWords()}" var="wd" border="1">
+
+      <h:column>
+        <f:facet name="header">
+          <h:outputText value="Word"/>
+        </f:facet>
+        <h:link outcome="viewWord.xhtml?id=#{wd.originalWord}" value="#{wd.originalWord}"/>
+      </h:column>
+
+      <h:column>
+        <f:facet name="header">
+          <h:outputText value="Language"/>
+        </f:facet>
+        <h:outputText value="#{wd.language}"/>
+      </h:column>
+
+      <h:column>
+        <f:facet name="header">
+          <h:outputText value="Date"/>
+        </f:facet>
+        <h:outputText value="#{wd.date}"/>
+      </h:column>
+
+    </h:dataTable>
+
+  </ui:define>
+
+</ui:composition>
+</html>

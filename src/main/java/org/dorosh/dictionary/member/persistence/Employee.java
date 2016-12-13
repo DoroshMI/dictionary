@@ -1,7 +1,7 @@
 /**
  *  
  */
-package org.dorosh.dictionary.member;
+package org.dorosh.dictionary.member.persistence;
 
 import java.io.Serializable;
 import java.util.Date;

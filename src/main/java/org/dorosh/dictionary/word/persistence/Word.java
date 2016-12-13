@@ -3,7 +3,7 @@
   *
   */
 
-package org.dorosh.dictionary;
+package org.dorosh.dictionary.word.persistence;
 
 import java.util.Date;
 import java.util.List;
@@ -38,9 +38,9 @@ import javax.validation.constraints.Size;
  *         
  */
 @Entity
-@Table(name="Words")
+@Table(name="WORDS")
 @NamedQueries({
-        @NamedQuery(name = "findAllWords", query = "SELECT w FROM Word w WHERE w.originalWord='good'")
+        @NamedQuery(name = "findAllWords", query = "SELECT w FROM Word w")
        })
 public class Word {
 
@@ -49,25 +49,30 @@ public class Word {
   // ======================================
 
   @Id
-  @GeneratedValue
-  private Long id;
- // @Id 
-  private String language;
-  
-  @Column(name="original_word", nullable=false)
+  @NotNull
+  @Column(name="Original_word", nullable=false)
   private String originalWord;
   
+  @NotNull
+  @Column(name="Language_Word", nullable=true)
+  private String language;
+
   /*
    * @param <c>date</c> describe when word was inserted in database
    */
   @NotNull
   @Temporal(TemporalType.DATE)
+  @Column(name="Date_of_create")
   private Date date;
   
+
+
+
   /*
    * @param study describe wheithe word is studied
    */
   private Boolean study;
+
   @Column(name="date_of_study")
   @Temporal(TemporalType.DATE)
   private Date dateOfStudy;
@@ -80,14 +85,6 @@ public class Word {
   @JoinTable(name = "WORDS_AND_translatedWords")
   private  List<Word> translatedWords;
   
-  /*
-   * Collection of related Words
-   */
-  @ElementCollection(fetch=FetchType.EAGER)
-  @CollectionTable(name="relation")
- 
-  private ArrayList<String> relatedWords;
-  
 
   // ======================================
   // =            Constructors            =
@@ -96,38 +93,32 @@ public class Word {
   public Word() {
   }
 
-  public Word(String originalWord, @Size(min = 2, max = 2) String language) {
+  public Word(String originalWord, @Size(min = 2, max = 2) String language, Date date) {
 	  this.setOriginalWord(originalWord);
 	  this.language=language;
-	  translatedWords=null;
+	  this.date=date;
+	  //translatedWords=null;
   }
 
   // ======================================
   // =          Getters & Setters         =
   // ======================================
-  public Long getId() {
-	  return id;
-  }
-
-  public void setId(Long id) {
-		this.id = id;
-  }
   
-  public String getLanguage() {
-	  return language;
-  }
-
-  public void setLanguage(String language) {
-	  this.language = language;
-  }
-
-
+  
   public String getOriginalWord() {
 	  return originalWord;
   }
 
   public void setOriginalWord(String originalWord) {
 	  this.originalWord = originalWord;
+  }
+
+  public String getLanguage() {
+    return language;
+  }
+
+  public void setLanguage(String language) {
+    this.language = language;
   }
 
   public Date getDate() {
@@ -138,38 +129,34 @@ public class Word {
 	  this.date = date;
   }
 
+
   public Boolean getStudy() {
-	  return study;
+    return study;
   }
 
   public void setStudy(Boolean study) {
-	  this.study = study;
+    this.study = study;
   }
 
   public Date getDateOfStudy() {
-	  return dateOfStudy;
+    return dateOfStudy;
   }
 
   public void setDateOfStudy(Date dateOfStudy) {
-	  this.dateOfStudy = dateOfStudy;
+    this.dateOfStudy = dateOfStudy;
   }
   
   public List<Word> getTranslatedWords() {
-		return translatedWords;
+    return translatedWords;
   }
 
   public void setTranslatedWords(List<Word> translatedWords) {
-		this.translatedWords = translatedWords;
+    this.translatedWords = translatedWords;
   }
 
-  public ArrayList<String> getRelatedWords() {
-		return relatedWords;
-	}
 
-  public void setRelatedWords(ArrayList<String> relatedWords) {
-		this.relatedWords = relatedWords;
-	}
-  
+
+
 
   // ======================================
   // =         hash, equals, toString     =
@@ -179,7 +166,6 @@ public class Word {
   public String toString() {
     final StringBuilder sb = new StringBuilder();
     sb.append("Word");
-    sb.append("{id=").append(getId());
     sb.append(getOriginalWord());
     sb.append(" translade as ");
     //sb.append(getTranslatedWords());
