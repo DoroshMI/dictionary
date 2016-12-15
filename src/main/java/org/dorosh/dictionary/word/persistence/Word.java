@@ -97,7 +97,6 @@ public class Word {
 	  this.setOriginalWord(originalWord);
 	  this.language=language;
 	  this.date=date;
-	  //translatedWords=null;
   }
 
   // ======================================
@@ -165,13 +164,25 @@ public class Word {
   @Override
   public String toString() {
     final StringBuilder sb = new StringBuilder();
-    sb.append("Word");
+    sb.append("Worddd:  ");
     sb.append(getOriginalWord());
     sb.append(" translade as ");
-    //sb.append(getTranslatedWords());
+    sb.append(getTranslatedWords());
     sb.append('}');
     return sb.toString();
   }
+
+  @Override
+   public boolean equals(Object other)
+    {
+        if (this == other) return true;
+        if (other == null) return false;
+        if(this.getClass() != other.getClass()) return false;
+        Word otherObj = (Word)other;
+        return this.originalWord == otherObj.originalWord;
+    }
+
+  
 
 
 

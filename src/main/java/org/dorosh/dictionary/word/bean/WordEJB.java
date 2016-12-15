@@ -31,6 +31,11 @@ public class WordEJB {
 	    return word;
 	  }
 
+	  public Word updateWord(Word word) {
+	    em.merge(word);
+	    return word;
+	  }
+
 	  public List<Word> findAllWords() {
 	    return em.createNamedQuery("findAllWords", Word.class).getResultList();
 	  }

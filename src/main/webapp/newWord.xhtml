@@ -19,15 +19,21 @@
 
         <h:outputLabel value="Language : "/>
         <h:inputText value="#{wordController.word.language}"/>
+      </h:panelGrid>
+      
+      <hr/>
 
+      <h:panelGrid  columns="2">
+      <h:outputLabel  value="Description : "/>
+        <h:inputTextarea id="translatedWord" value="#{wordController.translatedWord.originalWord}" cols="16" rows="3"/>
       </h:panelGrid>
 
+      <hr/>
 
-      <h:panelGrid columns="2">
-      <h:outputLabel value="Description : "/>
-        <h:inputTextarea value="#{wordController.translatedWord.originalWord}" cols="16" rows="3"/>
+      <h:panelGrid  columns="2">
+      <h:outputLabel  value="All Translate: "/>
+        <h:inputTextarea id="allTranslatedWords" value="#{wordController.allTranslatedWords}" cols="16" rows="3"/>
       </h:panelGrid>
-
       
 
       <h:commandButton value="Create a word" action="#{wordController.doCreateWord()}">
@@ -35,6 +41,7 @@
       </h:commandButton>
       <hr/>
       <h:commandButton value="Translate" action="#{wordController.doTranslateWord()}">
+        <f:ajax execute="@form" render=":wordForm:translatedWord :wordForm:allTranslatedWords"/>
       </h:commandButton>
 
     </h:form>

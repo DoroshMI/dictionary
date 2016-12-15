@@ -7,6 +7,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import java.util.Date;
+import java.util.ArrayList;
 
 import org.dorosh.dictionary.word.persistence.Word;
 import org.dorosh.dictionary.word.bean.WordEJB;
@@ -32,17 +33,48 @@ public class WordController {
 
   private Word translatedWord = new Word();
 
+  private String allTranslatedWords;
+
   // ======================================
   // =           Public Methods           =
   // ======================================
 
   public String doCreateWord() {
-    System.out.println("Created word: " + word);
-    word.setDate(new Date());
-    word.setStudy(false);
-    wordEJB.createWord(word);
-    FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Word created",
-            "The word" + word.getOriginalWord()));
+
+    //1-Перевіряємо чи є наявне слова в базі
+    if ( wordEJB.findWordById(word.getOriginalWord())==null){
+      word.setLanguage("EN");
+      word.setDate(new Date());
+      word.setStudy(false);
+      word.setTranslatedWords(new ArrayList<Word>());
+
+      word=wordEJB.createWord(word);
+    }
+    else{
+      word= wordEJB.findWordById(word.getOriginalWord());
+    }
+
+    //2-Перевіряємо чи є наявне слова-переклад в базі
+    if ( wordEJB.findWordById(translatedWord.getOriginalWord())==null){
+      translatedWord.setLanguage("UA");
+      translatedWord.setDate(new Date());
+      translatedWord.setStudy(false);
+      translatedWord.setTranslatedWords(new ArrayList<Word>());
+
+      wordEJB.createWord(translatedWord);
+    }
+    else{
+      translatedWord=wordEJB.findWordById(translatedWord.getOriginalWord());
+    }
+
+	if (!word.getTranslatedWords().contains(translatedWord)) {
+		word.getTranslatedWords().add(translatedWord);
+		translatedWord.getTranslatedWords().add(word);
+	}
+
+	wordEJB.updateWord(word);
+	wordEJB.updateWord(translatedWord);
+ 
     return "newWord.xhtml";
   }
 
@@ -50,11 +82,18 @@ public class WordController {
     Word tempWord=word;
     word=wordEJB.findWordById(word.getOriginalWord());
     if (word==null) {
-      word=tempWord
+      word=tempWord;
       translatedWord=tempWord;
     }
     else{
       translatedWord=wordEJB.findWordById(word.getTranslatedWords().get(0).getOriginalWord());
+      StringBuilder sb = new StringBuilder();
+      for(Word w : word.getTranslatedWords()){
+      	 
+      	sb.append(w.getOriginalWord());
+      	sb.append("\n");
+      }
+      allTranslatedWords=sb.toString();	
     }
     return "newWord.xhtml";
   }
@@ -81,5 +120,13 @@ public class WordController {
 
   public void setTranslatedWord(Word translatedWord) {
     this.translatedWord = translatedWord;
+  }
+
+  public String getAllTranslatedWords() { 
+    return allTranslatedWords;
+  }
+
+  public void setAllTranslatedWords(String allTranslatedWords) {
+    this.allTranslatedWords = allTranslatedWords;
   }
 }
